@@ -70,14 +70,33 @@ archivos=$( find -maxdepth 1 -name "*.log")
 
 for archivo in $archivos
 do
+    #Arrays para resolver el promedio diario
     declare -A Dias
     declare -A DuracionXDia
     declare -A LlamadasPorDia
 
+    #Arrays para resolver a los usuarios con más llamadas por semana
     declare -A Usuarios
     declare -A LlamadasPorSemana
-
     declare -A masLlamadasPorSemana
+
+    #Arrays (y variables) para resolver cantidad de llamadas y promedio por dia por usuario
+    diaActual=0                       #Me indica el día en el que estoy y qué vector debo usar
+    declare -A LlamadasUsuarioPorDia1 #Me indica la cantidad de llamadas de usuario en el día 1
+    declare -A LlamadasUsuarioPorDia2 #Me indica la cantidad de llamadas de usuario en el día 2
+    declare -A LlamadasUsuarioPorDia3 #Me indica la cantidad de llamadas de usuario en el día 3
+    declare -A LlamadasUsuarioPorDia4 #Me indica la cantidad de llamadas de usuario en el día 4
+    declare -A LlamadasUsuarioPorDia5 #Me indica la cantidad de llamadas de usuario en el día 5
+    declare -A LlamadasUsuarioPorDia6 #Me indica la cantidad de llamadas de usuario en el día 6
+    declare -A LlamadasUsuarioPorDia7 #Me indica la cantidad de llamadas de usuario en el día 7
+    declare -A DuracionUsuarioPorDia1 #Me indica la duración de llamadas de usuario en el día 1
+    declare -A DuracionUsuarioPorDia2 #Me indica la duración de llamadas de usuario en el día 2
+    declare -A DuracionUsuarioPorDia3 #Me indica la duración de llamadas de usuario en el día 3
+    declare -A DuracionUsuarioPorDia4 #Me indica la duración de llamadas de usuario en el día 4
+    declare -A DuracionUsuarioPorDia5 #Me indica la duración de llamadas de usuario en el día 5
+    declare -A DuracionUsuarioPorDia6 #Me indica la duración de llamadas de usuario en el día 6
+    declare -A DuracionUsuarioPorDia7 #Me indica la duración de llamadas de usuario en el día 7
+
 
     declare -a array
     i=0
@@ -147,6 +166,7 @@ do
                 DuracionXDia[$dia]=0
                 LlamadasPorDia[$dia]=0
                 let "contadorDias++"
+                let "diaActual++"
             fi
             
             IFS=': ' read -r -a tiempo <<< "$hora"
@@ -170,6 +190,36 @@ do
                 Usuarios[$contadorUsuarios]=$usuario
                 LlamadasPorSemana[$usuario]=0
                 let "contadorUsuarios++"
+                LlamadasUsuarioPorDia1[$usuario]=0
+                LlamadasUsuarioPorDia2[$usuario]=0
+                LlamadasUsuarioPorDia3[$usuario]=0
+                LlamadasUsuarioPorDia4[$usuario]=0
+                LlamadasUsuarioPorDia5[$usuario]=0
+                LlamadasUsuarioPorDia6[$usuario]=0
+                LlamadasUsuarioPorDia7[$usuario]=0
+                DuracionUsuarioPorDia1[$usuario]=0
+                DuracionUsuarioPorDia2[$usuario]=0
+                DuracionUsuarioPorDia3[$usuario]=0
+                DuracionUsuarioPorDia4[$usuario]=0
+                DuracionUsuarioPorDia5[$usuario]=0
+                DuracionUsuarioPorDia6[$usuario]=0
+                DuracionUsuarioPorDia7[$usuario]=0
+            fi
+
+            if [ $diaActual -eq 1 ];then
+                DuracionUsuarioPorDia1[$usuario]=$((${DuracionUsuarioPorDia1[$usuario]}-$duracion))
+            elif [ $diaActual -eq 2 ];then
+                DuracionUsuarioPorDia2[$usuario]=$((${DuracionUsuarioPorDia2[$usuario]}-$duracion))
+            elif [ $diaActual -eq 3 ];then
+                DuracionUsuarioPorDia3[$usuario]=$((${DuracionUsuarioPorDia3[$usuario]}-$duracion))
+            elif [ $diaActual -eq 4 ];then
+                DuracionUsuarioPorDia4[$usuario]=$((${DuracionUsuarioPorDia4[$usuario]}-$duracion))
+            elif [ $diaActual -eq 5 ];then
+                DuracionUsuarioPorDia5[$usuario]=$((${DuracionUsuarioPorDia5[$usuario]}-$duracion))
+            elif [ $diaActual -eq 6 ];then
+                DuracionUsuarioPorDia6[$usuario]=$((${DuracionUsuarioPorDia6[$usuario]}-$duracion))
+            else
+                DuracionUsuarioPorDia7[$usuario]=$((${DuracionUsuarioPorDia7[$usuario]}-$duracion))
             fi
         fi
 
@@ -204,6 +254,34 @@ do
                         DuracionXDia[$dia]=$((${DuracionXDia[$dia]}+$duracion))
                         LlamadasPorDia[$dia]=$((${LlamadasPorDia[$dia]}+1))
                         LlamadasPorSemana[$nuevoUser]=$((${LlamadasPorSemana[$nuevoUser]}+1))
+                        #echo "Dìa: $diaActual"
+                        #sleep 2
+                        if [ $diaActual -eq 1 ];then
+                            LlamadasUsuarioPorDia1[$nuevoUser]=$((${LlamadasUsuarioPorDia1[$nuevoUser]}+1))
+                            DuracionUsuarioPorDia1[$nuevoUser]=$((${DuracionUsuarioPorDia1[$nuevoUser]}+$duracion))
+                            #echo "$nuevoUser: Llamadas:${LlamadasUsuarioPorDia1[$nuevoUser]} <--> Duracion: ${DuracionUsuarioPorDia1[$nuevoUser]}"
+                            #sleep 3
+                        elif [ $diaActual -eq 2 ];then
+                            LlamadasUsuarioPorDia2[$nuevoUser]=$((${LlamadasUsuarioPorDia2[$nuevoUser]}+1))
+                            DuracionUsuarioPorDia2[$nuevoUser]=$((${DuracionUsuarioPorDia2[$nuevoUser]}+$duracion))
+                            #echo "$nuevoUser: Llamadas:${LlamadasUsuarioPorDia2[$nuevoUser]} <--> Duracion: ${DuracionUsuarioPorDia2[$nuevoUser]}"
+                            #sleep 3
+                        elif [ $diaActual -eq 3 ];then
+                            LlamadasUsuarioPorDia3[$nuevoUser]=$((${LlamadasUsuarioPorDia3[$nuevoUser]}+1))
+                            DuracionUsuarioPorDia3[$nuevoUser]=$((${DuracionUsuarioPorDia3[$nuevoUser]}+$duracion))
+                        elif [ $diaActual -eq 4 ];then
+                            LlamadasUsuarioPorDia4[$nuevoUser]=$((${LlamadasUsuarioPorDia4[$nuevoUser]}+1))
+                            DuracionUsuarioPorDia4[$nuevoUser]=$((${DuracionUsuarioPorDia4[$nuevoUser]}+$duracion))
+                        elif [ $diaActual -eq 5 ];then
+                            LlamadasUsuarioPorDia5[$nuevoUser]=$((${LlamadasUsuarioPorDia5[$nuevoUser]}+1))
+                            DuracionUsuarioPorDia5[$nuevoUser]=$((${DuracionUsuarioPorDia5[$nuevoUser]}+$duracion))
+                        elif [ $diaActual -eq 6 ];then
+                            LlamadasUsuarioPorDia6[$nuevoUser]=$((${LlamadasUsuarioPorDia6[$nuevoUser]}+1))
+                            DuracionUsuarioPorDia6[$nuevoUser]=$((${DuracionUsuarioPorDia6[$nuevoUser]}+$duracion))
+                        else
+                            LlamadasUsuarioPorDia7[$nuevoUser]=$((${LlamadasUsuarioPorDia7[$nuevoUser]}+1))
+                            DuracionUsuarioPorDia7[$nuevoUser]=$((${DuracionUsuarioPorDia7[$nuevoUser]}+$duracion))
+                        fi
                     else
                         #echo "No son iguales"
                         #sleep 1
@@ -250,6 +328,7 @@ do
         LlamadasPorSemana[$userMayor]=0
     done
 
+    #Este bloque muestra el promedio de llamadas por día
     echo "Duración promedio de llamadas por dia"
     for dia in ${Dias[@]}
     do
@@ -258,14 +337,86 @@ do
     done
 
     echo 
+
+    #Este bloque muestra la cantidad y el promedio por día por usuario
+    echo "Cantidad y promedio por usuario por día:"
+    for users in ${Usuarios[@]}
+    do
+        if [ $diaActual -ge 1 ];then
+            diAct=0
+            if [ ${LlamadasUsuarioPorDia1[$users]} -ne 0 ];then
+                average=$((${DuracionUsuarioPorDia1[$users]}/${LlamadasUsuarioPorDia1[$users]}))
+                echo "$users cantidad de llamadas: ${LlamadasUsuarioPorDia1[$users]} . Promedio: $average. Día ${Dias[$diAct]}"
+            else
+                echo "$users no hizo llamadas en el día ${Dias[$diAct]}"
+            fi
+        fi
+        if [ $diaActual -ge 2 ];then
+            diAct=1
+            if [ ${LlamadasUsuarioPorDia2[$users]} -ne 0 ];then
+                average=$((${DuracionUsuarioPorDia2[$users]}/${LlamadasUsuarioPorDia2[$users]}))
+                echo "$users cantidad de llamadas: ${LlamadasUsuarioPorDia2[$users]} . Promedio: $average. Día ${Dias[$diAct]}"
+            else
+                echo "$users no hizo llamadas en el día ${Dias[$diAct]}"
+            fi
+        fi
+        if [ $diaActual -ge 3 ];then
+            diAct=2
+            if [ ${LlamadasUsuarioPorDia3[$users]} -ne 0 ];then
+                average=$((${DuracionUsuarioPorDia3[$users]}/${LlamadasUsuarioPorDia3[$users]}))
+                echo "$users cantidad de llamadas: ${LlamadasUsuarioPorDia3[$users]} . Promedio: $average. Día ${Dias[$diAct]}"
+            else
+                echo "$users no hizo llamadas en el día ${Dias[$diAct]}"
+            fi
+        fi
+        if [ $diaActual -ge 4 ];then  
+            diAct=3
+            if [ ${LlamadasUsuarioPorDia4[$users]} -ne 0 ];then
+                average=$((${DuracionUsuarioPorDia4[$users]}/${LlamadasUsuarioPorDia4[$users]}))
+                echo "$users cantidad de llamadas: ${LlamadasUsuarioPorDia4[$users]} . Promedio: $average. Día ${Dias[$diAct]}"
+            else
+                echo "$users no hizo llamadas en el día ${Dias[$diAct]}"
+            fi
+        fi
+        if [ $diaActual -ge 5 ];then
+            diAct=4
+            if [ ${LlamadasUsuarioPorDia5[$users]} -ne 0 ];then
+                average=$((${DuracionUsuarioPorDia5[$users]}/${LlamadasUsuarioPorDia5[$users]}))
+                echo "$users cantidad de llamadas: ${LlamadasUsuarioPorDia5[$users]} . Promedio: $average. Día ${Dias[$diAct]}"
+            else
+                echo "$users no hizo llamadas en el día ${Dias[$diAct]}"
+            fi
+        fi
+        if [ $diaActual -ge 6 ];then
+            diAct=5
+            if [ ${LlamadasUsuarioPorDia6[$users]} -ne 0 ];then
+                average=$((${DuracionUsuarioPorDia6[$users]}/${LlamadasUsuarioPorDia6[$users]}))
+                echo "$users cantidad de llamadas: ${LlamadasUsuarioPorDia6[$users]} . Promedio: $average. Día ${Dias[$diAct]}"
+            else
+                echo "$users no hizo llamadas en el día ${Dias[$diAct]}"
+            fi
+        fi
+        if [ $diaActual -ge 7 ];then
+            diAct=6
+            if [ ${LlamadasUsuarioPorDia7[$users]} -ne 0 ];then
+                average=$((${DuracionUsuarioPorDia7[$users]}/${LlamadasUsuarioPorDia7[$users]}))
+                echo "$users cantidad de llamadas: ${LlamadasUsuarioPorDia7[$users]} . Promedio: $average. Día ${Dias[$diAct]}"
+            else
+                echo "$users no hizo llamadas en el día ${Dias[$diAct]}"
+            fi
+        fi
+    done
+
+    echo
+
+    #Este bloque muestra a los 3 usuarios con más llamadas por semana
     echo "Los 3 usuarios con mas llamada por semana"
     for usuar in ${masLlamadasPorSemana[@]}
     do
         echo $usuar
     done
 
-    echo "---"
-    echo
+    echo "[*****************************************************************************************************************]"
     
     unset hour
     unset minute
@@ -300,4 +451,22 @@ do
     unset masLlamadasPorSemana
     unset procesados
     unset archivo
+    unset diaActual
+    unset DuracionUsuarioPorDia1
+    unset DuracionUsuarioPorDia2
+    unset DuracionUsuarioPorDia3
+    unset DuracionUsuarioPorDia4
+    unset DuracionUsuarioPorDia5
+    unset DuracionUsuarioPorDia6
+    unset DuracionUsuarioPorDia7
+    unset LlamadasUsuarioPorDia1
+    unset LlamadasUsuarioPorDia2
+    unset LlamadasUsuarioPorDia3
+    unset LlamadasUsuarioPorDia4
+    unset LlamadasUsuarioPorDia5
+    unset LlamadasUsuarioPorDia6
+    unset LlamadasUsuarioPorDia7
+    unset users
+    unset average
+    unset diAct
 done
