@@ -1,5 +1,69 @@
 #!/bin/bash
 
+#Funcion que muestra la ayuda
+function ayuda(){
+    echo "Este script se ha creado con la finalidad de analizar archivos de log de llamadas que se encuentran en un directorio"
+    echo "Se procesarán los archivos y por cada uno se mostrará por pantalla lo siguiente:"
+    echo "Promedio de tiempo de llamadas realizada por día"
+    echo "Promedio de tiempo y cantidad por usuario por día"
+    echo "Los 3 usuarios con más llamadas en la semana"
+    echo "Cuantas llamadas no superan la media de tiempo por día y el usuario que tiene más llamadas por debajo de la media en la semana"
+    echo "Ejecución del script"
+    echo "./TP1EJ2.sh -f 'path_de_los_archivos_de_log'"
+    echo "El path_de_los_archivos_de_log puede ser absoluto o relativo"
+	exit 0
+} 
+
+#Funcion que me hace salir del script si los parámetros no son correctos
+function salir1(){
+    echo "El numero de parametros no es correcto"
+    echo "Ingrese './TP1EJ2.sh -h' O './TP1EJ2.sh -?' O './TP1EJ2.sh -help' para ver la ayuda"
+    exit 1
+}
+
+#Funcion que me hace salir del script si la ruta de archivos de log ingresada no es válida
+function salir2(){
+    echo "La ruta de los archivos de Log no es un directorio VALIDO";
+	exit 2;
+}
+
+#Funcion que me hace salir del script si la ruta de archivos de log ingresada está vacía
+function salir3(){
+    echo "No hay archivos en el directorio que usted pasó por parámetro";
+	exit 3;
+}
+
+#Verifico si el usuario quiere ver la ayuda
+if [ $1 = "-h" -o $1 = "-?" -o $1 = "-help" ]
+then
+	ayuda
+fi
+
+#valido que el numero de parametro sea correcto
+if [ $# -ne 2 ]; then
+    salir1
+fi
+
+#valido que las letras sean correctas que pase como parámetro sean correctas
+if [ $1 != "-f" ]; then
+    echo "El primer parámetro debe ser '-f'"
+    exit 100
+fi
+
+#valido que la ruta donde están los archivos de log sea un directorio valido
+if [ ! -d "$2" ] 
+then
+	salir2
+fi
+
+#valido que la ruta donde están los archivos de log contenga archivos
+dato=$(ls -1 "$2" | wc -l)
+
+if [ "$dato" -eq 0 ] 
+then
+	salir3
+fi
+
 cd "$2"
 
 archivos=$( find -maxdepth 1 -name "*.log")
@@ -20,7 +84,7 @@ do
 
     a=0
     
-    echo "SEMANA"
+    echo "Archivo: $archivo"
     inicio=$a
     contadorDias=0
     contadorUsuarios=0
