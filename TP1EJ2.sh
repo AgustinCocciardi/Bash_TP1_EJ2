@@ -11,6 +11,7 @@ function ayuda(){
     echo "Ejecución del script"
     echo "./TP1EJ2.sh -f 'path_de_los_archivos_de_log'"
     echo "El path_de_los_archivos_de_log puede ser absoluto o relativo"
+    echo "ACLARACIÓN IMPORTANTE: El promedio de las llamadas se mide en segundos"
 	exit 0
 } 
 
@@ -96,6 +97,24 @@ do
     declare -A DuracionUsuarioPorDia5 #Me indica la duración de llamadas de usuario en el día 5
     declare -A DuracionUsuarioPorDia6 #Me indica la duración de llamadas de usuario en el día 6
     declare -A DuracionUsuarioPorDia7 #Me indica la duración de llamadas de usuario en el día 7
+
+    #Arrays para resolver cuantas llamadas no superan la media de tiempo por día
+    cantidadLlamadasDia1=0          #Me indica cuantas llamadas se hicieron en el día 1
+    declare -A DuracionLlamadasDia1 #Me indica la duración de cada llamada hecha en el día 1
+    cantidadLlamadasDia2=0          #Me indica cuantas llamadas se hicieron en el día 2
+    declare -A DuracionLlamadasDia2 #Me indica la duración de cada llamada hecha en el día 2
+    cantidadLlamadasDia2=0          #Me indica cuantas llamadas se hicieron en el día 2
+    declare -A DuracionLlamadasDia2 #Me indica la duración de cada llamada hecha en el día 2
+    cantidadLlamadasDia3=0          #Me indica cuantas llamadas se hicieron en el día 3
+    declare -A DuracionLlamadasDia3 #Me indica la duración de cada llamada hecha en el día 3
+    cantidadLlamadasDia4=0          #Me indica cuantas llamadas se hicieron en el día 4
+    declare -A DuracionLlamadasDia4 #Me indica la duración de cada llamada hecha en el día 4
+    cantidadLlamadasDia5=0          #Me indica cuantas llamadas se hicieron en el día 5
+    declare -A DuracionLlamadasDia5 #Me indica la duración de cada llamada hecha en el día 5
+    cantidadLlamadasDia6=0          #Me indica cuantas llamadas se hicieron en el día 6
+    declare -A DuracionLlamadasDia6 #Me indica la duración de cada llamada hecha en el día 6
+    cantidadLlamadasDia7=0          #Me indica cuantas llamadas se hicieron en el día 7
+    declare -A DuracionLlamadasDia7 #Me indica la duración de cada llamada hecha en el día 7
 
 
     declare -a array
@@ -208,18 +227,25 @@ do
 
             if [ $diaActual -eq 1 ];then
                 DuracionUsuarioPorDia1[$usuario]=$((${DuracionUsuarioPorDia1[$usuario]}-$duracion))
+                DuracionLlamadasDia1[$cantidadLlamadasDia1]=$((0-$duracion))
             elif [ $diaActual -eq 2 ];then
                 DuracionUsuarioPorDia2[$usuario]=$((${DuracionUsuarioPorDia2[$usuario]}-$duracion))
+                DuracionLlamadasDia2[$cantidadLlamadasDia2]=$((0-$duracion))
             elif [ $diaActual -eq 3 ];then
                 DuracionUsuarioPorDia3[$usuario]=$((${DuracionUsuarioPorDia3[$usuario]}-$duracion))
+                DuracionLlamadasDia3[$cantidadLlamadasDia3]=$((0-$duracion))
             elif [ $diaActual -eq 4 ];then
                 DuracionUsuarioPorDia4[$usuario]=$((${DuracionUsuarioPorDia4[$usuario]}-$duracion))
+                DuracionLlamadasDia4[$cantidadLlamadasDia4]=$((0-$duracion))
             elif [ $diaActual -eq 5 ];then
                 DuracionUsuarioPorDia5[$usuario]=$((${DuracionUsuarioPorDia5[$usuario]}-$duracion))
+                DuracionLlamadasDia5[$cantidadLlamadasDia5]=$((0-$duracion))
             elif [ $diaActual -eq 6 ];then
                 DuracionUsuarioPorDia6[$usuario]=$((${DuracionUsuarioPorDia6[$usuario]}-$duracion))
+                DuracionLlamadasDia6[$cantidadLlamadasDia6]=$((0-$duracion))
             else
                 DuracionUsuarioPorDia7[$usuario]=$((${DuracionUsuarioPorDia7[$usuario]}-$duracion))
+                DuracionLlamadasDia7[$cantidadLlamadasDia7]=$((0-$duracion))
             fi
         fi
 
@@ -259,28 +285,46 @@ do
                         if [ $diaActual -eq 1 ];then
                             LlamadasUsuarioPorDia1[$nuevoUser]=$((${LlamadasUsuarioPorDia1[$nuevoUser]}+1))
                             DuracionUsuarioPorDia1[$nuevoUser]=$((${DuracionUsuarioPorDia1[$nuevoUser]}+$duracion))
+                            DuracionLlamadasDia1[$cantidadLlamadasDia1]=$((${DuracionLlamadasDia1[$cantidadLlamadasDia1]}+$duracion))
+                            #echo "Duración de llamada: ${DuracionLlamadasDia1[$cantidadLlamadasDia1]}"
+                            #sleep 4
+                            let "cantidadLlamadasDia1++"
+                            #echo "Cantidad llamadas en día 1 hasta ahora: $cantidadLlamadasDia1"
+                            #sleep 3
                             #echo "$nuevoUser: Llamadas:${LlamadasUsuarioPorDia1[$nuevoUser]} <--> Duracion: ${DuracionUsuarioPorDia1[$nuevoUser]}"
                             #sleep 3
                         elif [ $diaActual -eq 2 ];then
                             LlamadasUsuarioPorDia2[$nuevoUser]=$((${LlamadasUsuarioPorDia2[$nuevoUser]}+1))
                             DuracionUsuarioPorDia2[$nuevoUser]=$((${DuracionUsuarioPorDia2[$nuevoUser]}+$duracion))
+                            DuracionLlamadasDia2[$cantidadLlamadasDia2]=$((${DuracionLlamadasDia2[$cantidadLlamadasDia2]}+$duracion))
+                            let "cantidadLlamadasDia2++"
                             #echo "$nuevoUser: Llamadas:${LlamadasUsuarioPorDia2[$nuevoUser]} <--> Duracion: ${DuracionUsuarioPorDia2[$nuevoUser]}"
                             #sleep 3
                         elif [ $diaActual -eq 3 ];then
                             LlamadasUsuarioPorDia3[$nuevoUser]=$((${LlamadasUsuarioPorDia3[$nuevoUser]}+1))
                             DuracionUsuarioPorDia3[$nuevoUser]=$((${DuracionUsuarioPorDia3[$nuevoUser]}+$duracion))
+                            DuracionLlamadasDia3[$cantidadLlamadasDia3]=$((${DuracionLlamadasDia3[$cantidadLlamadasDia3]}+$duracion))
+                            let "cantidadLlamadasDia3++"
                         elif [ $diaActual -eq 4 ];then
                             LlamadasUsuarioPorDia4[$nuevoUser]=$((${LlamadasUsuarioPorDia4[$nuevoUser]}+1))
                             DuracionUsuarioPorDia4[$nuevoUser]=$((${DuracionUsuarioPorDia4[$nuevoUser]}+$duracion))
+                            DuracionLlamadasDia4[$cantidadLlamadasDia4]=$((${DuracionLlamadasDia4[$cantidadLlamadasDia4]}+$duracion))
+                            let "cantidadLlamadasDia4++"
                         elif [ $diaActual -eq 5 ];then
                             LlamadasUsuarioPorDia5[$nuevoUser]=$((${LlamadasUsuarioPorDia5[$nuevoUser]}+1))
                             DuracionUsuarioPorDia5[$nuevoUser]=$((${DuracionUsuarioPorDia5[$nuevoUser]}+$duracion))
+                            DuracionLlamadasDia5[$cantidadLlamadasDia5]=$((${DuracionLlamadasDia5[$cantidadLlamadasDia5]}+$duracion))
+                            let "cantidadLlamadasDia5++"
                         elif [ $diaActual -eq 6 ];then
                             LlamadasUsuarioPorDia6[$nuevoUser]=$((${LlamadasUsuarioPorDia6[$nuevoUser]}+1))
                             DuracionUsuarioPorDia6[$nuevoUser]=$((${DuracionUsuarioPorDia6[$nuevoUser]}+$duracion))
+                            DuracionLlamadasDia6[$cantidadLlamadasDia6]=$((${DuracionLlamadasDia6[$cantidadLlamadasDia6]}+$duracion))
+                            let "cantidadLlamadasDia6++"
                         else
                             LlamadasUsuarioPorDia7[$nuevoUser]=$((${LlamadasUsuarioPorDia7[$nuevoUser]}+1))
                             DuracionUsuarioPorDia7[$nuevoUser]=$((${DuracionUsuarioPorDia7[$nuevoUser]}+$duracion))
+                            DuracionLlamadasDia7[$cantidadLlamadasDia7]=$((${DuracionLlamadasDia7[$cantidadLlamadasDia7]}+$duracion))
+                            let "cantidadLlamadasDia7++"
                         fi
                     else
                         #echo "No son iguales"
@@ -416,6 +460,91 @@ do
         echo $usuar
     done
 
+    echo
+
+    #Este bloque muestra la cantidad de llamadas que no superan la media de tiempo por día
+    echo "Cantidad de llamadas que no superan la media de tiempo por día"
+    diaEnElQueEstoyActualmente=1
+    for day in ${Dias[@]}
+    do
+        numeroTotalDeLlamadas=0
+        if [ $diaEnElQueEstoyActualmente -eq 1 ];then
+            promedioDiario=$((${DuracionXDia[$dia]}/${LlamadasPorDia[$dia]}))
+            #echo "Promedio diario: $promedioDiario"
+            #sleep 3
+            for call in ${DuracionLlamadasDia1[@]}
+            do
+                #echo "$call <---> $promedioDiario"
+                #sleep 3
+                if [ $call -lt $promedioDiario ];then
+                    let "numeroTotalDeLlamadas++"
+                fi
+            done
+            echo "En el día $day se hicieron $numeroTotalDeLlamadas llamada(s) que no superan el promedio diario"
+        fi
+        if [ $diaEnElQueEstoyActualmente -eq 2 ];then
+            promedioDiario=$((${DuracionXDia[$dia]}/${LlamadasPorDia[$dia]}))
+            for call in ${DuracionLlamadasDia2[@]}
+            do
+                if [ $call -lt $promedioDiario ];then
+                    let "numeroTotalDeLlamadas++"
+                fi
+            done
+            echo "En el día $day se hicieron $numeroTotalDeLlamadas llamada(s) que no superan el promedio diario"
+        fi
+        if [ $diaEnElQueEstoyActualmente -eq 3 ];then
+            promedioDiario=$((${DuracionXDia[$dia]}/${LlamadasPorDia[$dia]}))
+            for call in ${DuracionLlamadasDia3[@]}
+            do
+                if [ $call -lt $promedioDiario ];then
+                    let "numeroTotalDeLlamadas++"
+                fi
+            done
+            echo "En el día $day se hicieron $numeroTotalDeLlamadas llamada(s) que no superan el promedio diario"
+        fi
+        if [ $diaEnElQueEstoyActualmente -eq 4 ];then
+            promedioDiario=$((${DuracionXDia[$dia]}/${LlamadasPorDia[$dia]}))
+            for call in ${DuracionLlamadasDia4[@]}
+            do
+                if [ $call -lt $promedioDiario ];then
+                    let "numeroTotalDeLlamadas++"
+                fi
+            done
+            echo "En el día $day se hicieron $numeroTotalDeLlamadas llamada(s) que no superan el promedio diario"
+        fi
+        if [ $diaEnElQueEstoyActualmente -eq 5 ];then
+            promedioDiario=$((${DuracionXDia[$dia]}/${LlamadasPorDia[$dia]}))
+            for call in ${DuracionLlamadasDia5[@]}
+            do
+                if [ $call -lt $promedioDiario ];then
+                    let "numeroTotalDeLlamadas++"
+                fi
+            done
+            echo "En el día $day se hicieron $numeroTotalDeLlamadas llamada(s) que no superan el promedio diario"
+        fi
+        if [ $diaEnElQueEstoyActualmente -eq 6 ];then
+            promedioDiario=$((${DuracionXDia[$dia]}/${LlamadasPorDia[$dia]}))
+            for call in ${DuracionLlamadasDia6[@]}
+            do
+                if [ $call -lt $promedioDiario ];then
+                    let "numeroTotalDeLlamadas++"
+                fi
+            done
+            echo "En el día $day se hicieron $numeroTotalDeLlamadas llamada(s) que no superan el promedio diario"
+        fi
+        if [ $diaEnElQueEstoyActualmente -eq 7 ];then
+            promedioDiario=$((${DuracionXDia[$dia]}/${LlamadasPorDia[$dia]}))
+            for call in ${DuracionLlamadasDia7[@]}
+            do
+                if [ $call -lt $promedioDiario ];then
+                    let "numeroTotalDeLlamadas++"
+                fi
+            done
+            echo "En el día $day se hicieron $numeroTotalDeLlamadas llamada(s) que no superan el promedio diario"
+        fi
+        let "diaEnElQueEstoyActualmente++"
+    done
+
     echo "[*****************************************************************************************************************]"
     
     unset hour
@@ -469,4 +598,20 @@ do
     unset users
     unset average
     unset diAct
+    unset cantidadLlamadasDia1
+    unset cantidadLlamadasDia2
+    unset cantidadLlamadasDia3
+    unset cantidadLlamadasDia4
+    unset cantidadLlamadasDia5
+    unset cantidadLlamadasDia6
+    unset cantidadLlamadasDia7
+    unset DuracionLlamadasDia1
+    unset DuracionLlamadasDia2
+    unset DuracionLlamadasDia3
+    unset DuracionLlamadasDia4
+    unset DuracionLlamadasDia5
+    unset DuracionLlamadasDia6
+    unset DuracionLlamadasDia7
+    unset diaEnElQueEstoyActualmente
+    unset numeroTotalDeLlamadas
 done
