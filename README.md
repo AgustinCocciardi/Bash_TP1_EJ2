@@ -3,7 +3,7 @@ Ejercicio 2 del tp de Bash.
 
 Promedio de tiempo de las llamadas realizadas por día (RESUELTO)
 
-Promedio de tiempo y cantidad por usuario por día (PENDIENTE)
+Promedio de tiempo y cantidad por usuario por día (RESUELTO)
 
 Los 3 usuarios con más llamadas en la semana (RESUELTO)
 
