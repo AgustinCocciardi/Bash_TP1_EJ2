@@ -98,7 +98,7 @@ do
     declare -A DuracionUsuarioPorDia6 #Me indica la duración de llamadas de usuario en el día 6
     declare -A DuracionUsuarioPorDia7 #Me indica la duración de llamadas de usuario en el día 7
 
-    #Arrays para resolver cuantas llamadas no superan la media de tiempo por día
+    #Arrays (y variables) para resolver cuantas llamadas no superan la media de tiempo por día
     cantidadLlamadasDia1=0          #Me indica cuantas llamadas se hicieron en el día 1
     declare -A DuracionLlamadasDia1 #Me indica la duración de cada llamada hecha en el día 1
     cantidadLlamadasDia2=0          #Me indica cuantas llamadas se hicieron en el día 2
@@ -116,6 +116,10 @@ do
     cantidadLlamadasDia7=0          #Me indica cuantas llamadas se hicieron en el día 7
     declare -A DuracionLlamadasDia7 #Me indica la duración de cada llamada hecha en el día 7
 
+    #Arrays (y variables) para resolver cual fue el usuario que hizo más llamadas que no superan la media por semana
+    declare -A LlamadasHechasPorUsuario                     #Me indica la longitud de las llamadas que hizo un usuario
+    declare -A CantidadLlamadasQueNoSuperanMediaSemanal     #Me indica las llamadas que no superan la media semanal por usuario
+
 
     declare -a array
     i=0
@@ -123,6 +127,14 @@ do
     a=0
     
     echo "Archivo: $archivo"
+    echo 
+
+    #if [ ! -s $archivo ];then
+    #echo "El archivo $archivo está vacío"
+    #else
+
+    #fi
+
     inicio=$a
     contadorDias=0
     contadorUsuarios=0
@@ -194,6 +206,7 @@ do
             second=${tiempo[2]}
             duracion=$(($hour+$minute+$second))
             DuracionXDia[$dia]=$((${DuracionXDia[$dia]}-$duracion))
+            duracionParcial=$((0-$duracion))
 
             #echo "Usuario: $usuario"
             #sleep 2
@@ -223,6 +236,8 @@ do
                 DuracionUsuarioPorDia5[$usuario]=0
                 DuracionUsuarioPorDia6[$usuario]=0
                 DuracionUsuarioPorDia7[$usuario]=0
+                LlamadasHechasPorUsuario[$usuario]=""
+                CantidadLlamadasQueNoSuperanMediaSemanal[$usuario]=0
             fi
 
             if [ $diaActual -eq 1 ];then
@@ -280,6 +295,8 @@ do
                         DuracionXDia[$dia]=$((${DuracionXDia[$dia]}+$duracion))
                         LlamadasPorDia[$dia]=$((${LlamadasPorDia[$dia]}+1))
                         LlamadasPorSemana[$nuevoUser]=$((${LlamadasPorSemana[$nuevoUser]}+1))
+                        duracionParcial=$(($duracionParcial+$duracion))
+                        LlamadasHechasPorUsuario[$usuario]+="$duracionParcial,"
                         #echo "Dìa: $diaActual"
                         #sleep 2
                         if [ $diaActual -eq 1 ];then
@@ -463,13 +480,13 @@ do
     echo
 
     #Este bloque muestra la cantidad de llamadas que no superan la media de tiempo por día
-    echo "Cantidad de llamadas que no superan la media de tiempo por día"
+    echo "Cantidad de llamadas que no superan la media de tiempo por día, y el usuario con más llamadas por debajo de la media semanal"
     diaEnElQueEstoyActualmente=1
     for day in ${Dias[@]}
     do
         numeroTotalDeLlamadas=0
         if [ $diaEnElQueEstoyActualmente -eq 1 ];then
-            promedioDiario=$((${DuracionXDia[$dia]}/${LlamadasPorDia[$dia]}))
+            promedioDiario=$((${DuracionXDia[$day]}/${LlamadasPorDia[$day]}))
             #echo "Promedio diario: $promedioDiario"
             #sleep 3
             for call in ${DuracionLlamadasDia1[@]}
@@ -483,7 +500,7 @@ do
             echo "En el día $day se hicieron $numeroTotalDeLlamadas llamada(s) que no superan el promedio diario"
         fi
         if [ $diaEnElQueEstoyActualmente -eq 2 ];then
-            promedioDiario=$((${DuracionXDia[$dia]}/${LlamadasPorDia[$dia]}))
+            promedioDiario=$((${DuracionXDia[$day]}/${LlamadasPorDia[$day]}))
             for call in ${DuracionLlamadasDia2[@]}
             do
                 if [ $call -lt $promedioDiario ];then
@@ -493,7 +510,7 @@ do
             echo "En el día $day se hicieron $numeroTotalDeLlamadas llamada(s) que no superan el promedio diario"
         fi
         if [ $diaEnElQueEstoyActualmente -eq 3 ];then
-            promedioDiario=$((${DuracionXDia[$dia]}/${LlamadasPorDia[$dia]}))
+            promedioDiario=$((${DuracionXDia[$day]}/${LlamadasPorDia[$day]}))
             for call in ${DuracionLlamadasDia3[@]}
             do
                 if [ $call -lt $promedioDiario ];then
@@ -503,7 +520,7 @@ do
             echo "En el día $day se hicieron $numeroTotalDeLlamadas llamada(s) que no superan el promedio diario"
         fi
         if [ $diaEnElQueEstoyActualmente -eq 4 ];then
-            promedioDiario=$((${DuracionXDia[$dia]}/${LlamadasPorDia[$dia]}))
+            promedioDiario=$((${DuracionXDia[$day]}/${LlamadasPorDia[$day]}))
             for call in ${DuracionLlamadasDia4[@]}
             do
                 if [ $call -lt $promedioDiario ];then
@@ -513,7 +530,7 @@ do
             echo "En el día $day se hicieron $numeroTotalDeLlamadas llamada(s) que no superan el promedio diario"
         fi
         if [ $diaEnElQueEstoyActualmente -eq 5 ];then
-            promedioDiario=$((${DuracionXDia[$dia]}/${LlamadasPorDia[$dia]}))
+            promedioDiario=$((${DuracionXDia[$day]}/${LlamadasPorDia[$day]}))
             for call in ${DuracionLlamadasDia5[@]}
             do
                 if [ $call -lt $promedioDiario ];then
@@ -523,7 +540,7 @@ do
             echo "En el día $day se hicieron $numeroTotalDeLlamadas llamada(s) que no superan el promedio diario"
         fi
         if [ $diaEnElQueEstoyActualmente -eq 6 ];then
-            promedioDiario=$((${DuracionXDia[$dia]}/${LlamadasPorDia[$dia]}))
+            promedioDiario=$((${DuracionXDia[$day]}/${LlamadasPorDia[$day]}))
             for call in ${DuracionLlamadasDia6[@]}
             do
                 if [ $call -lt $promedioDiario ];then
@@ -533,7 +550,7 @@ do
             echo "En el día $day se hicieron $numeroTotalDeLlamadas llamada(s) que no superan el promedio diario"
         fi
         if [ $diaEnElQueEstoyActualmente -eq 7 ];then
-            promedioDiario=$((${DuracionXDia[$dia]}/${LlamadasPorDia[$dia]}))
+            promedioDiario=$((${DuracionXDia[$day]}/${LlamadasPorDia[$day]}))
             for call in ${DuracionLlamadasDia7[@]}
             do
                 if [ $call -lt $promedioDiario ];then
@@ -544,6 +561,50 @@ do
         fi
         let "diaEnElQueEstoyActualmente++"
     done
+
+    #Este bloque muestra al usuario con más llamadas que no superan la media semanal
+    diasEnQueSeHicieronLlamadas=0
+    for us in ${Usuarios[@]}
+    do
+        linea=${LlamadasHechasPorUsuario[$us]}
+        nuevaLinea=`echo $linea | sed 's/.$//g'`
+        LlamadasHechasPorUsuario[$us]=$nuevaLinea
+    done
+
+    mediaSemanal=0
+    for dia in ${Dias[@]}
+    do
+        promedioDiario=$((${DuracionXDia[$dia]}/${LlamadasPorDia[$dia]}))
+        mediaSemanal=$(($mediaSemanal+$promedioDiario))
+        let "diasEnQueSeHicieronLlamadas++"
+    done
+
+    mediaSemanal=$(($mediaSemanal/$diasEnQueSeHicieronLlamadas))
+    
+    for user in ${Usuarios[@]}
+    do
+        llamadasAProcesar=${LlamadasHechasPorUsuario[$user]}
+        IFS=', ' read -r -a arrayLlamadas <<< "$llamadasAProcesar"
+        for i in ${arrayLlamadas[@]}
+        do
+            if [ $i -lt $mediaSemanal ];then
+                CantidadLlamadasQueNoSuperanMediaSemanal[$user]=$((${CantidadLlamadasQueNoSuperanMediaSemanal[$user]}+1))
+            fi
+        done
+    done
+
+    mayor=0
+    usuarioMayor=""
+    for user in ${Usuarios[@]}
+    do
+        if [ ${CantidadLlamadasQueNoSuperanMediaSemanal[$user]} -gt $mayor ];then
+            mayor=${CantidadLlamadasQueNoSuperanMediaSemanal[$user]}
+            usuarioMayor=$user
+        fi
+    done
+
+    echo "El usuario que hizo más llamadas por debajo de la media semanal es: $usuarioMayor"
+    echo
 
     echo "[*****************************************************************************************************************]"
     
@@ -614,4 +675,12 @@ do
     unset DuracionLlamadasDia7
     unset diaEnElQueEstoyActualmente
     unset numeroTotalDeLlamadas
+    unset CantidadLlamadasQueNoSuperanMediaSemanal
+    unset LlamadasHechasPorUsuario
+    unset duracionParcial
+    unset diasEnQueSeHicieronLlamadas
+    unset mediaSemanal
+    unset us
+    unset llamadasAProcesar
+    unset arrayLlamadas
 done
